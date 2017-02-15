@@ -3,6 +3,10 @@
 	font-weight: bold;
 }
 
+.centerText {
+    text-align: center;
+}
+
 .iconPadding
 {
    padding-right: 20px;
@@ -43,7 +47,25 @@ ion-side-menu.menu-left.menu {
 }
 
 .tabs-top > .tabs, .tabs.tabs-top{
-    top: 75px; /* was 44px*/
+    top: 78px; /* was 44px*/
+}
+
+.balance-tabs-bottom {
+    bottom: 34px;
+}
+
+.exchange-desc-font{
+    font-size:0.85rem;
+}
+
+.exchange-value-font{
+    font-size:0.75rem;
+}
+
+.exchange-center-thumbnail{
+    height: 100%;
+    vertical-align: middle;
+    text-align: center;
 }
 
 .float-button {
@@ -53,7 +75,6 @@ ion-side-menu.menu-left.menu {
   width: 50px;
   padding: 50px;
   font-size: 50px;
-  background: $warning;
   position: fixed;
   bottom: 50px; /* Adjust to where you want it */
   right: 25px; /* Adjust to where you want it */
@@ -73,4 +94,13 @@ ion-side-menu.menu-left.menu {
   text-align: center;
   margin-top: -20px; /* Note, this must be half the font size */
   color: $light;
+}
+
+.custom-option-btn {
+    min-width: 75px;
+    
+    p {
+        width: 100%;
+        text-align: center;
+    }
 }

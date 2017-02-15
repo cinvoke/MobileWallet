@@ -75,6 +75,18 @@ angular.module('casinocoin.services', [])
         timeout: 3000 
     };
     return {
+        getBlocks: function() {
+            return $http.get(insightURL + '/blocks', config).then(
+                function (response) {
+                    if (response.status == 200)
+                        return response;
+                    else
+                        reject('Error executing getBlocks method');
+                }, function (error) {
+                    return error;
+                }
+            );
+        },
         getBlock: function (blockHash) {
             return $http.get(insightURL + '/block/' + blockHash, config).then(
                 function (response) {
@@ -143,12 +155,14 @@ angular.module('casinocoin.services', [])
     var initComplete = false;
     // define doc collections
     var wallets;
+    var transactions;
     var receiveAddresses;
     var sendAddresses;
     var privateKeysMap = [];
 
     return {
         initDB: initDB,
+        save: save,
         // Wallet methods
         getWallets: getWallets,
         createWallet: createWallet,
@@ -158,14 +172,21 @@ angular.module('casinocoin.services', [])
         updateWallet: updateWallet,
         deleteWallet: deleteWallet,
         getWalletBalance: getWalletBalance,
+        getDefaultAddress: getDefaultAddress,
         handleIncommingTX: handleIncommingTX,
         subscribeWalletTX: subscribeWalletTX,
         sendCoins: sendCoins,
         getPrivateKey: getPrivatekey,
         setPrivateKey: setPrivateKey,
         clearPrivateKeys: clearPrivateKeys,
+        // Transaction methods
+        getTransactions: getTransactions,
+        getAddressTransactions: getAddressTransactions,
+        addTransaction: addTransaction,
+        updateTransaction: updateTransaction,
         // Address methods
         validateAddress: validateAddress,
+        isAddressMine: isAddressMine,
         getReceiveAddresses: getReceiveAddresses,
         addReceiveAddress: addReceiveAddress,
         updateReceiveAddress: updateReceiveAddress,
@@ -184,7 +205,7 @@ angular.module('casinocoin.services', [])
                     autoload: true,
                     autoloadCallback: loadHandler,
                     autosave: true,
-                    autosaveInterval: 10000, // save wallet every 5 seconds
+                    autosaveInterval: 10000, // save wallet every 10 seconds
                     persistenceAdapter: fsAdapter
                 });
             // auto load callback
@@ -194,6 +215,10 @@ angular.module('casinocoin.services', [])
                 wallets = walletDB.getCollection('wallets');
                 if (!wallets) {
                     wallets = walletDB.addCollection('wallets');
+                }
+                transactions = walletDB.getCollection('transactions');
+                if (!transactions) {
+                    transactions = walletDB.addCollection('transactions');
                 }
                 receiveAddresses = walletDB.getCollection('receiveAddresses');
                 if (!receiveAddresses) {
@@ -208,6 +233,11 @@ angular.module('casinocoin.services', [])
             }
         });
     };
+
+    function save() {
+        // save the database
+        walletDB.saveDatabase();
+    }
 
     function getWallets() {
         return $q(function (resolve, reject) {
@@ -239,11 +269,12 @@ angular.module('casinocoin.services', [])
                     "defaultAddress": M000Address,
                     "masterPrivateKey": hierarchicalKey.extendedPrivateKeyString('base58'),
                     "masterPublicAddress": masterAddress,
-                    "addresses": [{ "address": M000Address, "creationDate": $filter('date')(new Date(), "yyyy-MM-dd'T'HH:mm:ss.sss", "UTC") }]
+                    "addresses": [{ "address": M000Address, "creationDate": $filter('date')(new Date(), "yyyy-MM-dd'T'HH:mm:ss.sss", "UTC"), active: true }]
                 };
             // get address object
             insight.getAddress(M000Address).then(function (response) {
                 $log.debug("### getAddress Response: " + JSON.stringify(response));
+                response.data.label = "Default Address";
                 addReceiveAddress(response.data);
                 $log.debug("### Wallet Object: " + JSON.stringify(wallet));
                 wallets.insert(wallet);
@@ -344,6 +375,7 @@ angular.module('casinocoin.services', [])
                                 // Loop over wallet addresses and get private keys for derived wallet keys
                                 var addressIndex = 0;
                                 angular.forEach($scope.wallet.addresses, function (addressObject) {
+                                    $log.debug("### Create DerivedM000: " + angular.toJson(addressObject));
                                     var derivedM000 = hkey.derive('m/0/0/' + addressIndex);
                                     var privKeyM000 = new bitcore.PrivateKey(networks.livenet.privKeyVersion, derivedM000.eckey.private, derivedM000.eckey.compressed);
                                     var wif = privKeyM000.toString();
@@ -406,13 +438,14 @@ angular.module('casinocoin.services', [])
                                 // create new derived key
                                 var derivedM00X = hkey.derive('m/0/0/' + newAddressIndex);
                                 var M00XAddress = bitcore.Address.fromPubKey(derivedM00X.eckey.public).toString();
-                                var newAddressObject = { "address": M00XAddress, "creationDate": $filter('date')(new Date(), "yyyy-MM-dd'T'HH:mm:ss.sss", "UTC") }
+                                var newAddressObject = { "address": M00XAddress, "creationDate": $filter('date')(new Date(), "yyyy-MM-dd'T'HH:mm:ss.sss", "UTC"), active: true }
                                 // add new address to wallet
                                 $scope.wallet.addresses.push(newAddressObject);
                                 // get full address object
                                 insight.getAddress(M00XAddress).then(function (response) {
                                     $log.debug("### getAddress Response: " + JSON.stringify(response));
                                     addReceiveAddress(response.data);
+                                    save();
                                 }, function (error) {
                                     $log.error("### getAddress Error: " + JSON.stringify(error));
                                 });
@@ -454,10 +487,116 @@ angular.module('casinocoin.services', [])
         });
     }
 
+    function getDefaultAddress() {
+        return wallets.data[0].defaultAddress;
+    }
+
+    function getTransactions() {
+        return $q(function (resolve, reject) {
+            if (initComplete) {
+                resolve(transactions);
+            } else {
+                reject("Initialisation of WalletDB is not complete!")
+            }
+        });
+    }
+
+    function getAddressTransactions(address) {
+        return $q(function (resolve, reject) {
+            if (initComplete) {
+                var txResult = [];
+                // create array for all the promises
+                var promises = [];
+                // loop over address transaction id's
+                address.transactions.forEach(function (txid) {
+                    // create promise and add to array
+                    var deferred = $q.defer();
+                    promises.push(deferred.promise);
+                    var tx = transactions.find({ 'txid': { '$eq': txid } });
+                    $log.debug("### getAddressTransactions: " + angular.toJson(tx));
+                    if (tx.length == 0) {
+                        $log.debug("### get tx from insight: " + txid);
+                        // get the transaction from insight
+                        insight.getTransaction(txid).then(function (result) {
+                            // loop over transaction result and determine type and amount
+                            var tx = result.data;
+                            var sendAddressIsMine = false;
+                            var receiveAddressIsMine = true;
+                            var vinAmount = 0.00000000;
+                            var voutAmount = 0.00000000;
+                            var voutAmountSend = 0.00000000;
+                            // loop inputs
+                            tx.vin.forEach(function (vin) {
+                                if (vin.addr == address.addrStr) {
+                                    sendAddressIsMine = true;
+                                    vinAmount += vin.value;
+                                }
+                            });
+                            // loop outputs
+                            tx.vout.forEach(function (vout) {
+                                if (isAddressMine(vout.scriptPubKey.addresses[0])) {
+                                    voutAmount += parseFloat(vout.value);
+                                } else {
+                                    receiveAddressIsMine = false;
+                                    voutAmountSend += parseFloat(vout.value);
+                                }
+                            });
+                            if (sendAddressIsMine && receiveAddressIsMine) {
+                                tx.type = 'WALLET';
+                                tx.amount = tx.valueOut - tx.valueIn;
+                            } else if(sendAddressIsMine){
+                                tx.type = 'SEND';
+                                tx.amount = voutAmountSend;
+                            } else {
+                                tx.type = 'RECEIVE';
+                                tx.amount = voutAmount;
+                            }
+                            $log.debug("### Tx Type: " + tx.type + " Tx Amount: " + tx.amount);
+                            addTransaction(tx);
+                            txResult.push(tx);
+                            deferred.resolve();
+                        });
+                    } else if (tx.length == 1) {
+                        txResult.push(tx[0]);
+                        deferred.resolve();
+                    }
+                });
+                $q.all(promises).then(function () {
+                    $log.debug("### All resolved -> getAddressTransactions Result: " + angular.toJson(txResult));
+                    // sort the result descending by transaction time
+                    txResult = $filter('orderBy')(txResult, 'time', true);
+                    resolve(txResult);
+                });
+            } else {
+                reject("Initialisation of WalletDB is not complete!")
+            }
+        });
+    }
+
+    function addTransaction(transaction) {
+        transactions.insert(transaction);
+    };
+
+    function updateTransaction(transaction) {
+        transactions.update(transaction);
+    };
+
     function validateAddress(address) {
         var Address = bitcore.Address;
         var checkAddress = new Address(address);
         return checkAddress.isValid();
+    }
+
+    function isAddressMine(address) {
+        // check value against my wallet addresses
+        var result = false;
+        angular.forEach(receiveAddresses.data, function (receiveAddress) {
+            if (address === receiveAddress.addrStr) {
+                $log.debug("### Address is mine!");
+                result = true;
+            }
+        });
+        return result;
     }
 
     function getReceiveAddresses() {
@@ -478,7 +617,13 @@ angular.module('casinocoin.services', [])
         receiveAddresses.update(receiveAddress);
     };
 
-    function deleteReceiveAddress(receiveAddress) {
+    function deleteReceiveAddress(receiveAddress, wallet) {
+        // deactivate the wallet address
+        wallet.addresses.forEach(function (addressRow) {
+            if (receiveAddress.addrStr == addressRow.address) {
+                addressRow.active = false;
+            }
+        });
         receiveAddresses.remove(receiveAddress);
     };
 
@@ -539,11 +684,11 @@ angular.module('casinocoin.services', [])
         });
         if (transactionValue < 0) {
             var myToastMsg = ngToast.info({
-                content: '<p>You send ' + transactionValue + ' CSC.</p>'
+                content: '<p>You send ' + $filter('currency')(transactionValue, 'CSC ', 8) + '</p>'
             });
         } else if (transactionValue > 0) {
             var myToastMsg = ngToast.info({
-                content: '<p>You received ' + transactionValue + ' CSC with address ' + transactionAddressReceive + '</p>'
+                content: '<p>You received ' + $filter('currency')(transactionValue, 'CSC ', 8) + ' with address ' + transactionAddressReceive + '</p>'
             });
         }
         // emit UpdateWallet signal
@@ -614,15 +759,8 @@ angular.module('casinocoin.services', [])
                                 }
                             }
                             if (addressUsed) {
-                                // get derived key for 
-                                //var derivedName = 'm/' + addressIndex;
-                                //var derivedKey = hierarchicalKey.derive(derivedName);
-                                //var privKey = new bitcore.PrivateKey(networks.livenet.privKeyVersion, derivedKey.eckey.private, derivedKey.eckey.compressed);
-                                //var wif = privKey.toString();
-                                //$log.debug("### WIF "+ derivedName +": " + wif);
-                                //var derivedAddress = bitcore.Address.fromPubKey(derivedKey.eckey.public).toString();
+                                // addressed used so get the private key and add it to the signing key array
                                 privateKeys.push(getPrivatekey(address.addrStr));
-                                // privateKeys.push("Q8v9zYRxpsVw1nyMSxF463uXyRLsCPMsTZMuidwCVbEJ8P8nso4X");
                             }
                             $log.debug("### Private Keys: " + JSON.stringify(privateKeys));
                             $log.debug("### reset addressUsed ###");
@@ -630,6 +768,9 @@ angular.module('casinocoin.services', [])
                             // resolve current promise
                             deferred.resolve();
                         });
+                    } else {
+                        // resolve current promise
+                        deferred.resolve();
                     }
                 });
                 $q.all(promises).then(function () {
@@ -694,6 +835,7 @@ angular.module('casinocoin.services', [])
                 keyFound = true;
             }
         });
+        $log.debug("### PrivateKey - keyFound: " + keyFound + " - " + publicAddress + " - " + privateWIF);
         if(keyFound == false){
             privateKeysMap.push({ "address": publicAddress, "privateWIF": privateWIF });
         }

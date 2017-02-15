@@ -4,7 +4,17 @@
         <div class="list card" ng-hide="wallet">
             <div class="item item-divider item-text-wrap">
                 <p>You have no wallet on this device. Please create a new wallet.</p>
-                <button class="button button-block button-assertive" ng-click="createWalletModal.show()">{{'l_create_wallet'|translate}}</button>
+                <ion-list>
+                    <ion-radio ng-model="walletCreationChoice.value" ng-value="'GENERATED'">
+                        <h2>Generated Seed</h2>
+                        <p>Wallet is only valid on this device and can not be recreated on an other device using your own passphrase.</p>
+                    </ion-radio>
+                    <ion-radio ng-model="walletCreationChoice.value" ng-value="'PASSPHRASE'">
+                        <h2>Passphrase</h2>
+                        <p>Wallet can be recreated on other devices using your own passphrase but is less secure than a generated seed.</p>
+                    </ion-radio>
+                </ion-list>
+                <button class="button button-block button-assertive" ng-click="processWalletCreationChoice()">{{'l_create_wallet'|translate}}</button>
             </div>
         </div>
         <div class="list card" ng-show="wallet">

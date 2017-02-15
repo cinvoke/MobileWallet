@@ -1,4 +1,4 @@
-angular.module('casinocoin', ['ionic', 'ngCordova', 'pascalprecht.translate', 'ngToast', 'lokijs', 'casinocoin.controllers', 'pinpad'])
+angular.module('casinocoin', ['ionic', 'ngCordova', 'pascalprecht.translate', 'ngToast', 'lokijs', 'casinocoin.controllers', 'pinpad', 'monospaced.qrcode'])
 
 .config(function ($ionicConfigProvider) {
     $ionicConfigProvider.tabs.position('bottom');
@@ -19,6 +19,16 @@ angular.module('casinocoin', ['ionic', 'ngCordova', 'pascalprecht.translate', 'n
     });
 }])
 
+// add an url encode filter
+.filter('urlencode', function () {
+    return function (input) {
+        if (input) {
+            return window.encodeURIComponent(input);
+        }
+        return "";
+    }
+})
+
 .run(function ($ionicPlatform, $state, $rootScope, $ionicHistory, $log, $cordovaAppVersion, $window, ngToast, insight, WalletService, publicAPI) {
     // define app version
     $rootScope.appVersion = "";
@@ -31,6 +41,8 @@ angular.module('casinocoin', ['ionic', 'ngCordova', 'pascalprecht.translate', 'n
         refresh_token : ""
     };
     $rootScope.blocks = [];
+    $rootScope.coinInfo = {};
+    $rootScope.activeExchanges = [];
     // Show Block Toast info?
     $rootScope.showBlockToast = true;
     // set wallet variables
@@ -86,7 +98,7 @@ angular.module('casinocoin', ['ionic', 'ngCordova', 'pascalprecht.translate', 'n
         $rootScope.insightSocket.on('block', function (data) {
             insight.getBlock(data).then(function (result) {
                 if ($rootScope.showBlockToast) {
-                    $log.debug("### New Block received: " + JSON.stringify(result));
+                    $log.debug("### New Block received: " + angular.toJson(result));
                     var myToastMsg = ngToast.success({
                         content: '<p>New block with height ' + result.data.height + ' is found.</p>'
                     });
@@ -95,9 +107,16 @@ angular.module('casinocoin', ['ionic', 'ngCordova', 'pascalprecht.translate', 'n
                 $rootScope.blockheight = result.data.height;
                 // get new coin info data
                 publicAPI.getCoinInfo().then(function (apiResult) {
-                    $log.debug("### CoinInfo: " + JSON.stringify(apiResult));
+                    $log.debug("### CoinInfo: " + angular.toJson(apiResult));
                     if (apiResult.status == 200) {
                         $rootScope.coinInfo = apiResult.data.Result.CoinInfo;
+                    }
+                });
+                // get new exchanges info data
+                publicAPI.getActiveExchanges().then(function (apiResult) {
+                    $log.debug("### ActiveExchanges: " + angular.toJson(apiResult));
+                    if (apiResult.status == 200) {
+                        $rootScope.activeExchanges = apiResult.data.Result.ActiveExchanges;
                     }
                 });
             });
@@ -214,6 +233,33 @@ angular.module('casinocoin', ['ionic', 'ngCordova', 'pascalprecht.translate', 'n
                 controller: 'BlockchainCtrl'
             }
         }
+    })
+    .state('app.prypto', {
+        url: '/prypto',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/prypto.html',
+                controller: 'PryptoCtrl'
+            }
+        }
+    })
+    .state('app.addressbook', {
+        url: '/addressbook',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/addressbook.html',
+                controller: 'AddressbookCtrl'
+            }
+        }
+    })
+    .state('app.transactions', {
+        url: '/transactions',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/transactions.html',
+                controller: 'TransactionsCtrl'
+            }
+        }
     });
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/home');
@@ -225,7 +271,7 @@ angular.module('casinocoin', ['ionic', 'ngCordova', 'pascalprecht.translate', 'n
       })
       .registerAvailableLanguageKeys(['en', 'nl'], {
           'en': 'en', 'en_GB': 'en', 'en_US': 'en',
-          'nl': 'nl', 'nl_NL': 'nl', 'nl_BE': 'nl'
+          'nl': 'nl', 'nl_NL': 'nl', 'nl_BE': 'nl', '*': 'en'
       })
       .preferredLanguage('en')
       .fallbackLanguage('en')

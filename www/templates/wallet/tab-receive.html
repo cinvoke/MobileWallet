@@ -8,12 +8,15 @@
         </span>
     </div>
     <ion-content>
-        <ion-list>
-            <ion-item class="item-icon-left item-text-wrap" ng-repeat="address in walletReceiveAddresses">
-                <i class="icon fa fa-qrcode"></i><i class="boldText">{{address.addrStr}}</i>
+        <ion-list can-swipe="true">
+            <ion-item class="item-text-wrap" ng-repeat="address in walletReceiveAddresses" ng-click="showAddressTransactions(address)">
+                <i class="boldText">{{address.addrStr}}</i>
                 <p>Label: <i class="boldText">{{address.label}}</i></p>
                 <p>Balance: <i class="boldText">{{address.balance | currency : 'CSC ' : 8}}</i></p>
-                <p>Unconfirmed: <i class="boldText">{{address.unconfirmedBalance | currency : 'CSC ' : 8}}</i></p>
+                <p>Transactions: <i class="boldText">{{address.txApperances}}</i></p>
+                <ion-option-button class="button button-assertive custom-option-btn icon fa fa-qrcode" ng-click="addressQrCode(address)"></ion-option-button>
+                <ion-option-button class="button button-energized custom-option-btn icon ion-edit" ng-click="addressLabel(address)"></ion-option-button>
+                <ion-option-button class="button button-balanced custom-option-btn icon ion-share" ng-click="addressShare(address)"></ion-option-button>
             </ion-item>
         </ion-list>
     </ion-content>

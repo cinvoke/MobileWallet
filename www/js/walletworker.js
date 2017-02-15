@@ -23,9 +23,9 @@ self.onmessage = function (event) {
 
         // salt PIN with UUID 
         var saltedPIN = CryptoJS.PBKDF2(event.data.content.secretPIN, event.data.content.deviceUUID, {
-            iterations: 10,
+            iterations: 100,
             hasher: CryptoJS.algo.SHA256,
-            keySize: 256
+            keySize: 64
         });
         var msg = { messageType: 'log', content: "### saltedPIN: " + saltedPIN.toString() };
         postMessage(msg);
@@ -41,9 +41,9 @@ self.onmessage = function (event) {
 
         // salt PIN with UUID 
         var saltedPIN = CryptoJS.PBKDF2(event.data.content.secretPIN, event.data.content.deviceUUID, {
-            iterations: 10,
+            iterations: 100,
             hasher: CryptoJS.algo.SHA256,
-            keySize: 256
+            keySize: 64
         });
         var msg = { messageType: 'log', content: "### saltedPIN: " + saltedPIN.toString() };
         postMessage(msg);
