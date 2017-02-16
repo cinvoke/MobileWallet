@@ -54,7 +54,7 @@ ion-side-menu.menu-left.menu {
     bottom: 2px !important;
 }
 .tabs-top > .tabs, .tabs.tabs-top {
-    top: 78px; /* was 44px*/
+    top: 72px; /* was 44px*/
 }
 
 .platform-ios .balance-tabs-top {
