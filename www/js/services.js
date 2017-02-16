@@ -199,6 +199,7 @@ angular.module('casinocoin.services', [])
 
     function initDB() {
         return $q(function (resolve, reject) {
+            $log.debug("### initDB ###");
             var fsAdapter = new LokiCordovaFSAdapter({ "prefix": "loki" });
             walletDB = new Loki('walletDB',
                 {

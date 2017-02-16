@@ -29,7 +29,10 @@ angular.module('casinocoin', ['ionic', 'ngCordova', 'pascalprecht.translate', 'n
     }
 })
 
-.run(function ($ionicPlatform, $state, $rootScope, $ionicHistory, $log, $cordovaAppVersion, $window, ngToast, insight, WalletService, publicAPI) {
+.run(function ($ionicPlatform, $state, $rootScope, 
+               $ionicHistory, $log, $cordovaAppVersion, 
+               $cordovaStatusbar, $window, ngToast, 
+               insight, WalletService, publicAPI) {
     // define app version
     $rootScope.appVersion = "";
     $rootScope.security = {
@@ -58,10 +61,8 @@ angular.module('casinocoin', ['ionic', 'ngCordova', 'pascalprecht.translate', 'n
             cordova.plugins.Keyboard.disableScroll(true);
 
         }
-        if (window.StatusBar) {
-            // org.apache.cordova.statusbar required
-            StatusBar.styleDefault();
-        }
+        // Set StatusBar color
+        $cordovaStatusbar.styleColor('black');
         // Disable BACK button on home
         $ionicPlatform.registerBackButtonAction(function () {
             if ($state.current != undefined) {
@@ -114,7 +115,6 @@ angular.module('casinocoin', ['ionic', 'ngCordova', 'pascalprecht.translate', 'n
                 });
                 // get new exchanges info data
                 publicAPI.getActiveExchanges().then(function (apiResult) {
-                    $log.debug("### ActiveExchanges: " + angular.toJson(apiResult));
                     if (apiResult.status == 200) {
                         $rootScope.activeExchanges = apiResult.data.Result.ActiveExchanges;
                     }

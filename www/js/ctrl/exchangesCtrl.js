@@ -8,7 +8,6 @@
     $scope.updateActiveExchanges = function () {
         $log.debug("### updateActiveExchanges() ###");
         publicAPI.getActiveExchanges().then(function (apiResult) {
-            $log.debug("### ActiveExchanges: " + angular.toJson(apiResult));
             if (apiResult.status == 200) {
                 $rootScope.activeExchanges = apiResult.data.Result.ActiveExchanges;
             }

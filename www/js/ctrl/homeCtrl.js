@@ -27,7 +27,6 @@
             });
             // get new exchanges info data
             publicAPI.getActiveExchanges().then(function (apiResult) {
-                $log.debug("### ActiveExchanges: " + angular.toJson(apiResult));
                 if (apiResult.status == 200) {
                     $rootScope.activeExchanges = apiResult.data.Result.ActiveExchanges;
                 }

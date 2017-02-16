@@ -7,8 +7,7 @@
     text-align: center;
 }
 
-.iconPadding
-{
+.iconPadding {
    padding-right: 20px;
 }
 
@@ -22,7 +21,7 @@ ion-side-menu.menu-left.menu {
   background-color: #000000 !important;
 }
 
-.removeMarginBottom{
+.removeMarginBottom {
   margin-bottom: 0px !important;
 }
 
@@ -30,28 +29,40 @@ ion-side-menu.menu-left.menu {
     bottom: 0px;
 }
 
-.balance-font{
+.balance-font {
     font-size:0.85rem;
     font-weight: bold;
     text-align: center;
 }
 
-.balance-header{
+.balance-header {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
-    height:auto;
+    height: auto;
+}
+
+.balance-header-nomargin {
+    margin: 0px !important;
+    padding: 1px !important;
 }
 
 .balance-tabs-top {
     top: 31px;
 }
 
-.tabs-top > .tabs, .tabs.tabs-top{
+.scroll-content {
+    bottom: 2px !important;
+}
+.tabs-top > .tabs, .tabs.tabs-top {
     top: 78px; /* was 44px*/
 }
 
-.balance-tabs-bottom {
-    bottom: 34px;
+.platform-ios .balance-tabs-top {
+    top: 0px;
+}
+
+.platform-ios .tabs-top > .tabs, .platform-ios .tabs.tabs-top {
+    top: 63px !important;
 }
 
 .exchange-desc-font{
@@ -93,14 +104,5 @@ ion-side-menu.menu-left.menu {
   width: 100%;
   text-align: center;
   margin-top: -20px; /* Note, this must be half the font size */
-  color: $light;
-}
-
-.custom-option-btn {
-    min-width: 75px;
-    
-    p {
-        width: 100%;
-        text-align: center;
-    }
+  color: white;
 }
