@@ -7,11 +7,11 @@ For example, you might change some of the default colors:
 $light:                           #fff !default;
 $stable:                          #f8f8f8 !default;
 $positive:                        #387ef5 !default;
-$calm:                            #11c1f3 !default;
-$balanced:                        #33cd5f !default;
-$energized:                       #ffc900 !default;
+$calm:                            #11c1f3 !default; // Blue
+$balanced:                        #33cd5f !default; // Green
+$energized:                       #ffc900 !default; // Yellow
 $assertive:                       #ef473a !default;
-$royal:                           #886aea !default;
+$royal:                           #886aea !default; // Purple
 $dark:                            #444 !default;
 
 SandCoin Blue:  #25c9fc
@@ -24,6 +24,8 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 $dark:  #000000 !default;
 $light: #f1f1f1 !default;
 $assertive: #901119 !default;
+$balanced: #33cd5f !default; // RECEIVED Tx
+$royal: #901119 !default; // SEND Tx
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";

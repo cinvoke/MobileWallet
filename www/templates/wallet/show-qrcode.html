@@ -1,0 +1,29 @@
+<ion-modal-view>
+    <ion-header-bar class="bar bar-header bar-assertive">
+        <h1 class="title">Address QRCode</h1>
+        <div class="buttons">
+            <button class="button button-clear" ng-click="closeQRCodeModal()">{{'l_close'|translate}}</button>
+        </div>
+    </ion-header-bar>
+  <ion-content>
+      <p ng-show="qrcodeData.label" class="boldText centerText">{{qrcodeData.label}}</p>
+      <p class="centerText">{{qrcodeData.address}}</p>
+      <div class="row">
+          <div class="col col-15"></div>
+          <div class="col col-67">
+              <qrcode version="8" error-correction-level="L" data="{{makeQRCodeUrl()}}" size="{{qrcodeSize}}"></qrcode>
+          </div>
+          <div class="col col-15"></div>
+      </div>
+      <form name="frmQRCode">
+          <label class="item item-input">
+              <span class="input-label">Amount</span>
+              <input type="number" ng-model="qrcodeData.amount">
+          </label>
+          <label class="item item-input">
+              <span class="input-label">Message</span>
+              <input type="text" ng-model="qrcodeData.message">
+          </label>
+      </form>
+  </ion-content>
+</ion-modal-view>
