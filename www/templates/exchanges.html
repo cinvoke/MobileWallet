@@ -1,27 +1,27 @@
 <ion-view>
-    <ion-nav-title>{{"l_exchanges" | translate}}</ion-nav-title>
+    <ion-nav-title>{{'l_exchanges' | translate}}</ion-nav-title>
     <ion-content padding="true">
-        <ion-refresher pulling-text="Refresh..." on-refresh="updateActiveExchanges()">
+        <ion-refresher pulling-text="{{'l_refresh' | translate}}" on-refresh="updateActiveExchanges()">
         </ion-refresher>
         <ion-list class="list-inset">
-            <ion-item class="card item-thumbnail-left" ng-repeat="exchange in activeExchanges">
+            <ion-item class="card item-thumbnail-left" ng-repeat="exchange in activeExchanges" ng-click="openExchangeURL(exchange.access_url)">
                 <img data-ng-src="data:{{exchange.image_mime_type}};base64,{{exchange.exchange_image}}" />
                 <h2>{{exchange.exchange_name}}</h2>
                 <div class="exchange-desc-font item-text-wrap">{{exchange.description}}</div>
                 <div class="row exchange-value-font">
-                    <div class="col col-50">Last Traded Price</div>
+                    <div class="col col-50">{{'l_last_price' | translate}}</div>
                     <div class="col col-50 boldText">{{exchange.last_price_btc | currency : 'BTC ' : 8}}</div>
                 </div>
                 <div class="row exchange-value-font">
-                    <div class="col col-50">24h Volume</div>
+                    <div class="col col-50">{{'l_24h_volume' | translate}}</div>
                     <div class="col col-50 boldText">{{exchange.volume24h | number : 2}}</div>
                 </div>
                 <div class="row exchange-value-font">
-                    <div class="col col-50">Bid Price</div>
+                    <div class="col col-50">{{'l_bid_price' | translate}}</div>
                     <div class="col col-50 boldText">{{exchange.last_bid_price_btc | currency : 'BTC ' : 8}}</div>
                 </div>
                 <div class="row exchange-value-font">
-                    <div class="col col-50">Ask Price</div>
+                    <div class="col col-50">{{'l_ask_price' | translate}}</div>
                     <div class="col col-50 boldText">{{exchange.last_ask_price_btc | currency : 'BTC ' : 8}}</div>
                 </div>
             </ion-item>

@@ -1,0 +1,41 @@
+<ion-view>
+  <ion-nav-title>{{"l_settings" | translate}}</ion-nav-title>
+  <ion-content padding="true">
+      <div class="list list-inset">
+          <div class="item item-divider">{{'l_wallet' | translate}}</div>
+          <label class="item item-input item-select">
+              <div class="input-label">{{'l_fiat_currency'|translate}}</div>
+              <select>
+                  <option selected>USD</option>
+                  <option>EUR</option>
+                  <option>CNY</option>
+                  <option>JPY</option>
+                  <option>RUB</option>
+                  <option>CAD</option>
+                  <option>GBP</option>
+                  <option>AUD</option>
+                  <option>NZD</option>
+            </select>
+          </label>
+
+          <div class="item item-divider">{{'l_security' | translate}}</div>
+          <li class="item item-toggle">{{'l_touch_id' | translate}}
+              <label class="toggle toggle-assertive">
+                  <input type="checkbox">
+                  <div class="track">
+                      <div class="handle"></div>
+                  </div>
+              </label>
+          </li>
+          <li class="item item-toggle">
+              {{'l_2FA' | translate}}
+              <label class="toggle toggle-assertive">
+                  <input type="checkbox">
+                  <div class="track">
+                      <div class="handle"></div>
+                  </div>
+              </label>
+          </li>
+      </div>
+  </ion-content>
+</ion-view>

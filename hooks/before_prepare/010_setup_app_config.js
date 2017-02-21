@@ -8,7 +8,7 @@ var rootdir = process.argv[2];
 var oauth_clientid = "4E7SLp7CFM6vGcVwBhHxupyM3N0a";
 var oauth_clientsecret = "5a73X2IDvAPMMe5ZkJrJrsm3tBUa";
 // build_app = Casinocoin or Sandcoins
-var build_app = "Casinocoin";
+var build_app = "Sandcoins";
 
 function replace_string_in_file(filename, to_replace, replace_with) {
     var data = fs.readFileSync(filename, 'utf8');
@@ -32,6 +32,7 @@ if (rootdir) {
         replace_string_in_file(scssFile, "\\$assertive: #901119", "$assertive: #25c9fc");
         // copy files
         fs.createReadStream(path.join(rootdir, "resources/icon-sandcoin.png")).pipe(fs.createWriteStream(path.join(rootdir, "resources/icon.png")));
+        fs.createReadStream(path.join(rootdir, "resources/ios/icon-sandcoin.png")).pipe(fs.createWriteStream(path.join(rootdir, "resources/ios/icon.png")));
         fs.createReadStream(path.join(rootdir, "resources/splash-sandcoin.png")).pipe(fs.createWriteStream(path.join(rootdir, "resources/splash.png")));
         fs.createReadStream(path.join(rootdir, "resources/bg-sandcoin.png")).pipe(fs.createWriteStream(path.join(rootdir, "www/img/background.png")));
         fs.createReadStream(path.join(rootdir, "resources/sandcoin-icon-1024x1024.png")).pipe(fs.createWriteStream(path.join(rootdir, "www/img/home-icon.png")));
@@ -56,6 +57,7 @@ if (rootdir) {
         replace_string_in_file(scssFile, "\\$assertive: #25c9fc", "$assertive: #901119");
         // copy files
         fs.createReadStream(path.join(rootdir, "resources/icon-casinocoin.png")).pipe(fs.createWriteStream(path.join(rootdir, "resources/icon.png")));
+        fs.createReadStream(path.join(rootdir, "resources/ios/icon-casinocoin.png")).pipe(fs.createWriteStream(path.join(rootdir, "resources/ios/icon.png")));
         fs.createReadStream(path.join(rootdir, "resources/splash-casinocoin.png")).pipe(fs.createWriteStream(path.join(rootdir, "resources/splash.png")));
         fs.createReadStream(path.join(rootdir, "resources/bg-casinocoin.png")).pipe(fs.createWriteStream(path.join(rootdir, "www/img/background.png")));
         fs.createReadStream(path.join(rootdir, "resources/casinocoin-icon-1024x1024.png")).pipe(fs.createWriteStream(path.join(rootdir, "www/img/home-icon.png")));

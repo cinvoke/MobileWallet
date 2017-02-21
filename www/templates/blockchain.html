@@ -4,19 +4,19 @@
       <div class="list list-inset">
           <ion-item ng-repeat="block in blocks">
               <div class="row">
-                  <div class="col col-50">Height</div>
+                  <div class="col col-50">{{"l_height" | translate}}</div>
                   <div class="col col-50 boldText ">{{block.height}}</div>
               </div>
               <div class="row">
-                  <div class="col col-50">Time</div>
+                  <div class="col col-50">{{"l_time" | translate}}</div>
                   <div class="col col-50 boldText item-text-wrap">{{block.time*1000 | date:'dd-MM-yyyy HH:mm:ss Z'}}</div>
               </div>
               <div class="row">
-                  <div class="col col-50">Size</div>
+                  <div class="col col-50">{{"l_size" | translate}}</div>
                   <div class="col col-50 boldText">{{block.size}}</div>
               </div>
               <div class="row">
-                  <div class="col col-50">Transactions</div>
+                  <div class="col col-50">{{"l_transactions" | translate}}</div>
                   <div class="col col-50 boldText">{{block.txlength}}</div>
               </div>
           </ion-item>

@@ -426,40 +426,47 @@ angular.module('casinocoin.services', [])
                     walletWorker.onmessage = function (eventMessage) {
                         if (eventMessage.data.messageType == 'result') {
                             var decryptedMasterKey = eventMessage.data.content;
-                            $log.debug("### Decrypt Result: " + decryptedMasterKey);
-                            // check public key against wallet key
-                            var bitcore = require('bitcore');
-                            var hkey = new bitcore.HierarchicalKey(decryptedMasterKey);
-                            var networks = bitcore.networks;
-                            var cscMasterAddress = bitcore.Address.fromPubKey(hkey.eckey.public).toString();
-                            $log.debug("### Decrypted Master Public Address: " + cscMasterAddress + " - Stored Public Address: " + $scope.wallet.masterPublicAddress);
-                            if ($scope.wallet.masterPublicAddress == cscMasterAddress) {
-                                // count addresses
-                                var newAddressIndex = $scope.wallet.addresses.length;
-                                // create new derived key
-                                var derivedM00X = hkey.derive('m/0/0/' + newAddressIndex);
-                                var M00XAddress = bitcore.Address.fromPubKey(derivedM00X.eckey.public).toString();
-                                var newAddressObject = { "address": M00XAddress, "creationDate": $filter('date')(new Date(), "yyyy-MM-dd'T'HH:mm:ss.sss", "UTC"), active: true }
-                                // add new address to wallet
-                                $scope.wallet.addresses.push(newAddressObject);
-                                // get full address object
-                                insight.getAddress(M00XAddress).then(function (response) {
-                                    $log.debug("### getAddress Response: " + JSON.stringify(response));
-                                    addReceiveAddress(response.data);
-                                    save();
-                                }, function (error) {
-                                    $log.error("### getAddress Error: " + JSON.stringify(error));
-                                });
-                                $ionicLoading.hide();
-                                resolve(newAddressObject);
+                            $log.debug("### Decrypt Result: " + angular.toJson(decryptedMasterKey));
+                            if (decryptedMasterKey.length > 0) {
+                                // check public key against wallet key
+                                var bitcore = require('bitcore');
+                                var hkey = new bitcore.HierarchicalKey(decryptedMasterKey);
+                                var networks = bitcore.networks;
+                                var cscMasterAddress = bitcore.Address.fromPubKey(hkey.eckey.public).toString();
+                                $log.debug("### Decrypted Master Public Address: " + cscMasterAddress + " - Stored Public Address: " + $scope.wallet.masterPublicAddress);
+                                if ($scope.wallet.masterPublicAddress == cscMasterAddress) {
+                                    // count addresses
+                                    var newAddressIndex = $scope.wallet.addresses.length;
+                                    // create new derived key
+                                    var derivedM00X = hkey.derive('m/0/0/' + newAddressIndex);
+                                    var M00XAddress = bitcore.Address.fromPubKey(derivedM00X.eckey.public).toString();
+                                    var newAddressObject = { "address": M00XAddress, "creationDate": $filter('date')(new Date(), "yyyy-MM-dd'T'HH:mm:ss.sss", "UTC"), active: true }
+                                    // add new address to wallet
+                                    $scope.wallet.addresses.push(newAddressObject);
+                                    // get full address object
+                                    insight.getAddress(M00XAddress).then(function (response) {
+                                        $log.debug("### getAddress Response: " + JSON.stringify(response));
+                                        addReceiveAddress(response.data);
+                                        save();
+                                    }, function (error) {
+                                        $log.error("### getAddress Error: " + JSON.stringify(error));
+                                    });
+                                    $ionicLoading.hide();
+                                    resolve(newAddressObject);
+                                } else {
+                                    $ionicLoading.hide();
+                                    reject("Error decrypting private keys");
+                                }
                             } else {
                                 $ionicLoading.hide();
-                                reject("### Error decrypting private keys");
+                                reject("Error decrypting private keys");
                             }
                         } else if (eventMessage.data.messageType == 'error') {
                             $ionicLoading.hide();
                             $log.debug("### Decrypt Error: " + eventMessage.data.content);
                             reject(eventMessage.data.content);
+                        } else if (eventMessage.data.messageType == 'log') {
+                            $log.debug("### Decrypt Log: " + eventMessage.data.content);
                         }
                     }
                     // post decryption data to walletWorker

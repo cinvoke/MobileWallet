@@ -17,4 +17,9 @@
         });
     }
 
+    $scope.openExchangeURL = function (url) {
+        $log.debug("### openExchangeURL: " + url);
+        window.open(url, '_blank', 'location=yes');
+    }
+
 });

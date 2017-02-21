@@ -68,23 +68,42 @@
     // navigate to default tab on page show
     $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
         $log.debug("### toState: " + toState.name + " fromState: " + fromState.name);
+
         if (toState.name == 'app.wallet') {
-            // navigate to app.wallet.home
+            // navigate to app.wallet.home tab
             $ionicTabsDelegate.$getByHandle('wallet-tabs').select(1);
             if ($scope.wallet) {
                 $rootScope.$emit("UpdateWalletValues", {});
             }
+        }
+/*
         } else if (toState.name == 'app.wallet.home') {
+            // select tab index 1
+            $timeout(function () {
+                $ionicTabsDelegate.$getByHandle('wallet-tabs').select(1);
+            }, 0);
+            // enable sidemenu swipe
+            $ionicSideMenuDelegate.canDragContent(true);
+            // update wallet values if we have a wallet
             if ($scope.wallet) {
                 $rootScope.$emit("UpdateWalletValues", {});
             }
         } else if (toState.name == 'app.wallet.send') {
-            $ionicTabsDelegate.$getByHandle('wallet-tabs').select(0);
+            // select tab index 0
+            $timeout(function () {
+                $ionicTabsDelegate.$getByHandle('wallet-tabs').select(0);
+            }, 0);
+            // enable sidemenu swipe
+            $ionicSideMenuDelegate.canDragContent(true);
         } else if (toState.name == 'app.wallet.receive') {
+            // select tab index 2
+            $timeout(function () {
+                $ionicTabsDelegate.$getByHandle('wallet-tabs').select(2);
+            },0);
             // disable sidemenu swipe
-            $ionicTabsDelegate.$getByHandle('wallet-tabs').select(2);
             $ionicSideMenuDelegate.canDragContent(false);
         }
+*/
     });
 
     $scope.PINCompleteOnCreate = function (pincode) {
@@ -346,6 +365,14 @@
                 $rootScope.$emit("UpdateWalletValues", {});
             }, function (error) {
                 $log.error("### Error creating new addres: " + angular.toJson(error));
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Error Creating Address',
+                    template: '<p>There was an error creating a new address. Please verify that you entered the correct PIN.</p>',
+                    buttons: [{
+                        text: 'Ok',
+                        type: 'button-assertive'
+                    }]
+                });
             });
         });
     }

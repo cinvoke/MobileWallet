@@ -14,13 +14,13 @@
             </div>
         </ion-header-bar>
         <ion-tabs class="tabs-assertive tabs-top tabs-icon-top tabs-default" delegate-handle="wallet-tabs">
-            <ion-tab title="{{'l_send'|translate}}" icon="fa fa-sign-out" ui-sref="app.wallet.send" ng-show="wallet">
+            <ion-tab title="{{'l_send'|translate}}" icon="fa fa-sign-out" ui-sref="app.wallet.send">
                 <ion-nav-view name="tab-send" class="balance-tabs-top"></ion-nav-view>
             </ion-tab>
             <ion-tab title="{{'l_wallet'|translate}}" icon="fa fa-money" ui-sref="app.wallet.home">
                 <ion-nav-view name="tab-home" class="balance-tabs-top"></ion-nav-view>
             </ion-tab>
-            <ion-tab title="{{'l_receive'|translate}}" icon="fa fa-sign-in" ui-sref="app.wallet.receive" ng-show="wallet">
+            <ion-tab title="{{'l_receive'|translate}}" icon="fa fa-sign-in" ui-sref="app.wallet.receive">
                 <ion-nav-view name="tab-receive" class="balance-tabs-top"></ion-nav-view>
             </ion-tab>
         </ion-tabs>

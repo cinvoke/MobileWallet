@@ -1,7 +1,7 @@
 ﻿angular.module('pinpad', ['ionic'])
 
-.controller('PinpadCtrl', function ($scope, $rootScope, publicAPI) {
-    console.log("### PinpadCtrl");
+.controller('PinpadCtrl', function ($scope, $rootScope, $log, publicAPI) {
+    $log.debug("### PinpadCtrl");
     // initialize PIN
     $scope.pinpadPIN = "";
     $scope.PIN1 = "";
@@ -48,8 +48,13 @@
     }
 
     $scope.executePinOk = function () {
-        console.log("### PIN Code OK");
+        $log.debug("### PIN Code OK");
         $scope.PINCompleteCallback($scope.pinpadPIN);
         resetPIN();
+    }
+
+    $scope.closePINPadModal = function () {
+        $log.debug("### PIN Pad Closed");
+        $scope.pinpadModal.hide();
     }
 })

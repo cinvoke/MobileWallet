@@ -1,21 +1,21 @@
-<ion-view view-title="Prypto Cards">
+<ion-view view-title="{{'l_prypto_cards' | translate}}">
     <ion-content>
         <div class="card" ng-hide="wallet">
             <div class="item item-divider item-text-wrap">
-                <p>You have no wallet on this device. Please create a new wallet before redeeming a Prypto card.</p>
+                <p>{{'l_prypto_no_wallet' | translate}}</p>
             </div>
         </div>
         <div class="card" ng-show="wallet">
             <div class="item item-divider text-center">
-                Redeem Prypto Card
+                {{'l_redeem_prypto' | translate}}
             </div>
             <div class="item item-text-wrap">
-                <label class="item item-input">Enter or scan your Prypto card codes to redeem</label>
+                <label class="item item-input">{{'l_enter_or_scan_prypto' | translate}}</label>
                 <form ng-submit="redeemPryptoCard()">
                     <div class="row row-center">
                         <div class="col col-75">
-                            <input type="text" placeholder="Prypto Code" ng-model="redeem.pryptoCode" style="width:100%" required> <br/>
-                            <input type="text" placeholder="Security Code" ng-model="redeem.securityCode" style="width:100%" required>
+                            <input type="text" placeholder="{{'l_prypto_code' | translate}}" ng-model="redeem.pryptoCode" style="width:100%" required> <br/>
+                            <input type="text" placeholder="{{'l_security_code' | translate}}" ng-model="redeem.securityCode" style="width:100%" required>
                         </div>
                         <div class="col col-25">
                             <a class="button button-assertive" ng-click="scanPryptoCard()" style="width:100%"><i class="fa fa-qrcode fa-lg fa-fw"></i></a>
@@ -23,7 +23,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <button class="button button-block button-assertive" type="submit">Redeem!</button>
+                            <button class="button button-block button-assertive" type="submit">{{'l_redeem!' | translate}}</button>
                         </div>
                     </div>
                 </form>
