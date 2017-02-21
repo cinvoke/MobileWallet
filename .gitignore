@@ -5,3 +5,6 @@ node_modules/
 platforms/
 plugins/
 bin/
+andre.jochems.android.keystore.jks
+build.json
+bld/
