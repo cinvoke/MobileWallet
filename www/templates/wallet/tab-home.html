@@ -19,7 +19,7 @@
         </div>
         <div class="list card" ng-show="wallet">
             <ion-scroll direction="y">
-                <ion-refresher pulling-text="Refresh..." on-refresh="updateWalletValues()">
+                <ion-refresher pulling-text="{{'l_refresh' | translate}}" on-refresh="updateWalletValues()">
                 </ion-refresher>
                 <div class="item item-divider">Default Address</div>
                 <div class="item item-text-wrap boldText item-button-right">

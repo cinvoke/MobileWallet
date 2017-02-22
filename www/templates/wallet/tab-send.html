@@ -1,7 +1,12 @@
 ﻿<ion-view>
     <ion-nav-title>{{'l_send'|translate}}</ion-nav-title>
     <ion-content  scroll="false">
-        <form name="frmSendCoins" ng-submit="doSendCoins(sendCoinsRequest, frmSendCoins)" novalidate>
+        <div class="list card" ng-hide="wallet">
+            <div class="item item-text-wrap">
+                <p>You have no wallet on this device. Please create a new wallet from the wallet tab.</p>
+            </div>
+        </div>
+        <form name="frmSendCoins" ng-submit="doSendCoins(sendCoinsRequest, frmSendCoins)" ng-show="wallet" novalidate>
             <div class="card">
                 <label class="item item-divider">Send coins to address</label>
                 <div class="item item-text-wrap item-button-right">

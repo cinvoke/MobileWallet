@@ -1,6 +1,6 @@
 ﻿angular.module('casinocoin.controllers')
 
-.controller('ExchangesCtrl', function ($rootScope, $scope, $log, publicAPI, $ionicSideMenuDelegate) {
+.controller('ExchangesCtrl', function ($rootScope, $scope, $log, publicAPI, $ionicSideMenuDelegate, $cordovaInAppBrowser) {
     $log.debug("### ExchangesCtrl ###");
     // enable sidemenu swipe
     $ionicSideMenuDelegate.canDragContent(true);
@@ -19,7 +19,18 @@
 
     $scope.openExchangeURL = function (url) {
         $log.debug("### openExchangeURL: " + url);
-        window.open(url, '_blank', 'location=yes');
+        var options = {
+            location: 'yes',
+            clearcache: 'yes',
+            toolbar: 'no'
+        };
+        $cordovaInAppBrowser.open(url, '_blank', options)
+          .then(function (event) {
+              // success
+          })
+          .catch(function (event) {
+              // error
+          });
     }
 
 });

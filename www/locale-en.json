@@ -45,7 +45,7 @@
   "l_previous": "Previous",
   "l_confirmed_balance": "Confirmed Balance",
   "l_unconfirmed_balance": "Unconfirmed Balance",
-  "l_refresh" : "Refresh...",
+  "l_refresh" : "Refresh ...",
   "l_height" : "Height",
   "l_time": "Time",
   "l_size": "Size",
@@ -70,5 +70,6 @@
   "l_fiat_currency": "Fiat Currency",
   "l_touch_id": "Touch ID",
   "l_security": "Security",
-  "l_2FA": "Two Factor Authentication"
+  "l_2FA": "Two Factor Authentication",
+  "l_show_blocks": "Show new block messages"
 }

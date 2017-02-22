@@ -20,7 +20,7 @@
     });
 
     // Create the PIN Pad modal that we will use later
-    $ionicModal.fromTemplateUrl('templates/wallet/pinpad-dialog.html', {
+    $ionicModal.fromTemplateUrl('templates/modals/pinpad-dialog.html', {
         scope: $scope,
         animation: 'slide-in-down'
     }).then(function (modal) {
@@ -29,7 +29,7 @@
     });
 
     // Create the QRCode modal that we will use later
-    $ionicModal.fromTemplateUrl('templates/wallet/show-qrcode.html', {
+    $ionicModal.fromTemplateUrl('templates/modals/show-qrcode.html', {
         scope: $scope,
         animation: 'slide-in-up'
     }).then(function (modal) {
@@ -38,7 +38,7 @@
     });
 
     // Create the AddressTx modal that we will use later
-    $ionicModal.fromTemplateUrl('templates/wallet/show-address-tx.html', {
+    $ionicModal.fromTemplateUrl('templates/modals/show-address-tx.html', {
         scope: $scope,
         animation: 'slide-in-up'
     }).then(function (modal) {
@@ -72,16 +72,7 @@
         if (toState.name == 'app.wallet') {
             // navigate to app.wallet.home tab
             $ionicTabsDelegate.$getByHandle('wallet-tabs').select(1);
-            if ($scope.wallet) {
-                $rootScope.$emit("UpdateWalletValues", {});
-            }
-        }
-/*
         } else if (toState.name == 'app.wallet.home') {
-            // select tab index 1
-            $timeout(function () {
-                $ionicTabsDelegate.$getByHandle('wallet-tabs').select(1);
-            }, 0);
             // enable sidemenu swipe
             $ionicSideMenuDelegate.canDragContent(true);
             // update wallet values if we have a wallet
@@ -89,21 +80,12 @@
                 $rootScope.$emit("UpdateWalletValues", {});
             }
         } else if (toState.name == 'app.wallet.send') {
-            // select tab index 0
-            $timeout(function () {
-                $ionicTabsDelegate.$getByHandle('wallet-tabs').select(0);
-            }, 0);
             // enable sidemenu swipe
             $ionicSideMenuDelegate.canDragContent(true);
         } else if (toState.name == 'app.wallet.receive') {
-            // select tab index 2
-            $timeout(function () {
-                $ionicTabsDelegate.$getByHandle('wallet-tabs').select(2);
-            },0);
             // disable sidemenu swipe
             $ionicSideMenuDelegate.canDragContent(false);
         }
-*/
     });
 
     $scope.PINCompleteOnCreate = function (pincode) {

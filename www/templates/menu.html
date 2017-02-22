@@ -56,10 +56,12 @@
                     <i class="icon fa fa-cog"></i>
                     {{'l_settings'|translate}}
                 </ion-item>
+<!--
                 <ion-item class="item-dark item-icon-left" menu-close href="#/app/importexport">
                     <i class="icon fa fa-file-text"></i>
                     {{'l_import_export'|translate}}
                 </ion-item>
+-->
             </ion-list>
         </ion-content>
     </ion-side-menu>
@@ -69,9 +71,9 @@
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item class="item-asertive item-icon-left" menu-close href="#/app/transactions">
+                <ion-item class="item-asertive item-icon-left" menu-close ng-click="transactionsModal.show()">
                     <i class="icon fa fa-list-alt"></i>{{"l_transactions" | translate}}</ion-item>
-                <ion-item class="item-asertive item-icon-left" menu-close href="#/app/addressbook">
+                <ion-item class="item-asertive item-icon-left" menu-close ng-click="addressbookModal.show()">
                     <i class="icon fa fa-book"></i>{{"l_addressbook" | translate}}</ion-item>
             </ion-list>
         </ion-content>

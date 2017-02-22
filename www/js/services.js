@@ -157,7 +157,7 @@ angular.module('casinocoin.services', [])
     var wallets;
     var transactions;
     var receiveAddresses;
-    var sendAddresses;
+    var bookAddresses;
     var privateKeysMap = [];
 
     return {
@@ -191,10 +191,10 @@ angular.module('casinocoin.services', [])
         addReceiveAddress: addReceiveAddress,
         updateReceiveAddress: updateReceiveAddress,
         deleteReceiveAddress: deleteReceiveAddress,
-        getSendAddresses: getSendAddresses,
-        addSendAddress: addSendAddress,
-        updateSendAddress: updateSendAddress,
-        deleteSendAddress: deleteSendAddress
+        getBookAddresses: getBookAddresses,
+        addBookAddress: addBookAddress,
+        updateBookAddress: updateBookAddress,
+        deleteBookAddress: deleteBookAddress
     };
 
     function initDB() {
@@ -225,9 +225,9 @@ angular.module('casinocoin.services', [])
                 if (!receiveAddresses) {
                     receiveAddresses = walletDB.addCollection('receiveAddresses');
                 }
-                sendAddresses = walletDB.getCollection('sendAddresses');
-                if (!sendAddresses) {
-                    sendAddresses = walletDB.addCollection('sendAddresses');
+                bookAddresses = walletDB.getCollection('bookAddresses');
+                if (!bookAddresses) {
+                    bookAddresses = walletDB.addCollection('bookAddresses');
                 }
                 initComplete = true;
                 resolve();
@@ -499,19 +499,55 @@ angular.module('casinocoin.services', [])
         return wallets.data[0].defaultAddress;
     }
 
-    function getTransactions() {
+    function getTransactions(offsetValue, limitValue) {
         return $q(function (resolve, reject) {
             if (initComplete) {
-                resolve(transactions);
+                // update all transactions if offset = 0
+                if(offsetValue == 0){
+                    // create array for all the promises
+                    var promises = [];
+                    // loop all receiveAddresses
+                    angular.forEach(receiveAddresses.data, function (receiveAddress) {
+                        // create promise and add to array
+                        var deferred = $q.defer();
+                        promises.push(deferred.promise);
+                        // get address transactions
+                        getAddressTransactions(receiveAddress, true).then(function (addressTransactions) {
+                            deferred.resolve();
+                        })
+                    });
+                    $q.all(promises).then(function () {
+                        $log.debug("### All resolved -> getTransactions");
+                        // sort the transactions descending by transaction time
+                        var resultSet = transactions.chain()
+                            .find()
+                            .simplesort("time", true)
+                            .offset(offsetValue)
+                            .limit(limitValue)
+                            .data();
+                        resolve(resultSet);
+                    });
+                } else {
+                    $log.debug("### getTransactions - offset: " + offsetValue + " limit: " + limitValue + " Total: " + transactions.data.length);
+                    // get the transactions for offset and limit
+                    var resultSet = transactions.chain()
+                            .find()
+                            .simplesort("time", true)
+                            .offset(offsetValue)
+                            .limit(limitValue)
+                            .data();
+                    resolve(resultSet);
+                }
             } else {
                 reject("Initialisation of WalletDB is not complete!")
             }
         });
     }
 
-    function getAddressTransactions(address) {
+    function getAddressTransactions(address, updateOnly) {
         return $q(function (resolve, reject) {
             if (initComplete) {
+                $log.debug("### getAddressTransactions: " + address.addrStr);
                 var txResult = [];
                 // create array for all the promises
                 var promises = [];
@@ -520,10 +556,9 @@ angular.module('casinocoin.services', [])
                     // create promise and add to array
                     var deferred = $q.defer();
                     promises.push(deferred.promise);
-                    var tx = transactions.find({ 'txid': { '$eq': txid } });
-                    $log.debug("### getAddressTransactions: " + angular.toJson(tx));
-                    if (tx.length == 0) {
-                        $log.debug("### get tx from insight: " + txid);
+                    var collTx = transactions.find({ 'txid': { '$eq': txid } });
+                    if (collTx.length == 0 || (collTx.length == 1 && (!angular.isDefined(collTx[0].confirmations) || (collTx[0].confirmations < $rootScope.requiredConfirmations)))) {
+                        $log.debug("### getAddressTransactions - get from insight: " + txid);
                         // get the transaction from insight
                         insight.getTransaction(txid).then(function (result) {
                             // loop over transaction result and determine type and amount
@@ -560,12 +595,19 @@ angular.module('casinocoin.services', [])
                                 tx.amount = voutAmount;
                             }
                             $log.debug("### Tx Type: " + tx.type + " Tx Amount: " + tx.amount);
-                            addTransaction(tx);
-                            txResult.push(tx);
+                            if(collTx.length == 0){
+                                addTransaction(tx);
+                                txResult.push(tx);
+                            } else {
+                                // update the transaction object with new values
+                                angular.extend(collTx[0], tx);
+                                updateTransaction(collTx[0]);
+                                txResult.push(collTx[0]);
+                            }
                             deferred.resolve();
                         });
-                    } else if (tx.length == 1) {
-                        txResult.push(tx[0]);
+                    } else if (collTx.length == 1) {
+                        txResult.push(collTx[0]);
                         deferred.resolve();
                     }
                 });
@@ -635,26 +677,26 @@ angular.module('casinocoin.services', [])
         receiveAddresses.remove(receiveAddress);
     };
 
-    function getSendAddresses() {
+    function getBookAddresses() {
         return $q(function (resolve, reject) {
             if (initComplete) {
-                resolve(sendAddresses);
+                resolve(bookAddresses);
             } else {
                 reject("Initialisation of WalletDB is not complete!")
             }
         });
     }
 
-    function addSendAddress(sendAddress) {
-        sendAddresses.insert(sendAddress);
+    function addBookAddress(bookAddress) {
+        bookAddresses.insert(bookAddress);
     };
 
-    function updateSendAddress(sendAddress) {
-        sendAddresses.update(sendAddress);
+    function updateBookAddress(bookAddress) {
+        bookAddresses.update(bookAddress);
     };
 
-    function deleteSendAddress(sendAddress) {
-        sendAddresses.remove(sendAddress);
+    function deleteBookAddress(bookAddress) {
+        bookAddresses.remove(bookAddress);
     };
 
     function handleIncommingTX(transaction) {

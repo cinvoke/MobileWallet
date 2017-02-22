@@ -1,22 +1,40 @@
-angular.module('casinocoin', ['ionic', 'ngCordova', 'pascalprecht.translate', 'ngToast', 'lokijs', 'casinocoin.controllers', 'pinpad', 'monospaced.qrcode'])
+angular.module('casinocoin', [
+    'ionic',
+    'ngCordova', 
+    'pascalprecht.translate', 
+    'ngToast', 
+    'lokijs',
+    'ngStorage',
+    'pinpad', 
+    'monospaced.qrcode',
+    'casinocoin.controllers'
+])
 
+// configure tabs
 .config(function ($ionicConfigProvider) {
     $ionicConfigProvider.tabs.position('bottom');
 })
 
+// configure debug log
 .config(function($logProvider){
     $logProvider.debugEnabled(true);
 })
 
-//configure Toast Messages
+// configure Toast Messages
 .config(['ngToastProvider', function(ngToast) {
     ngToast.configure({
         verticalPosition: 'bottom',
         horizontalPosition: 'center',
-        timeout: 10000,
+        timeout: 5000,
         animation: 'slide',
         maxNumber: 3
     });
+}])
+
+// configure storage
+.config(['$localStorageProvider',
+function ($localStorageProvider) {
+    $localStorageProvider.setKeyPrefix('CSCAppStorage');
 }])
 
 // add an url encode filter
@@ -32,7 +50,8 @@ angular.module('casinocoin', ['ionic', 'ngCordova', 'pascalprecht.translate', 'n
 .run(function ($ionicPlatform, $state, $rootScope, 
                $ionicHistory, $log, $cordovaAppVersion, 
                $cordovaStatusbar, $window, ngToast, 
-               insight, WalletService, publicAPI) {
+               insight, WalletService, publicAPI,
+               $localStorage) {
     // define app version
     $rootScope.appVersion = "";
     $rootScope.security = {
@@ -43,11 +62,23 @@ angular.module('casinocoin', ['ionic', 'ngCordova', 'pascalprecht.translate', 'n
         access_token: "",
         refresh_token : ""
     };
+    // initialize settings if necesarry
+    var settings = $localStorage;
+    if (!settings.initialized) {
+        // initialize settings
+        settings = $localStorage.$default({
+            initialized: true,
+            fiatCurrency: 'USD',
+            showBlockToast: true,
+            useTouchID: false,
+            use2FA: false
+        });
+    }
     $rootScope.blocks = [];
     $rootScope.coinInfo = {};
     $rootScope.activeExchanges = [];
     // Show Block Toast info?
-    $rootScope.showBlockToast = true;
+    $rootScope.showBlockToast = $localStorage.showBlockToast;
     // set wallet variables
     $rootScope.requiredConfirmations = 6;
     $rootScope.fees = 0.01;

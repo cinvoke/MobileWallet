@@ -1,23 +1,28 @@
 ﻿<ion-view>
     <ion-nav-title>{{'l_receive'|translate}}</ion-nav-title>
-    <div class="float-button">
-        <span class="height-fix">
-            <a class="content" ng-click="addNewAddress()">
-                <i class="ion-plus-circled assertive"> </i>
-            </a>
-        </span>
+    <div ng-show="wallet">
+        <button class="button button-assertive button-float" ng-click="addNewAddress()">
+            <i class="icon ion-plus"></i>
+        </button>
     </div>
     <ion-content>
-        <ion-list can-swipe="true">
-            <ion-item class="item-text-wrap" ng-repeat="address in walletReceiveAddresses" ng-click="showAddressTransactions(address)">
-                <i class="boldText">{{address.addrStr}}</i>
-                <p>Label: <i class="boldText">{{address.label}}</i></p>
-                <p>Balance: <i class="boldText">{{address.balance | currency : 'CSC ' : 8}}</i></p>
-                <p>Transactions: <i class="boldText">{{address.txApperances}}</i></p>
-                <ion-option-button class="button button-assertive custom-option-btn icon fa fa-qrcode" ng-click="addressQrCode(address)"></ion-option-button>
-                <ion-option-button class="button button-energized custom-option-btn icon ion-edit" ng-click="addressLabel(address)"></ion-option-button>
-                <ion-option-button class="button button-balanced custom-option-btn icon ion-share" ng-click="addressShare(address)"></ion-option-button>
-            </ion-item>
-        </ion-list>
-    </ion-content>
+        <div class="list card" ng-hide="wallet">
+            <div class="item item-text-wrap">
+                <p>You have no wallet on this device. Please create a new wallet from the wallet tab.</p>
+            </div>
+        </div>
+        <div ng-show="wallet">
+            <ion-list can-swipe="true">
+                <ion-item class="item-text-wrap" ng-repeat="address in walletReceiveAddresses" ng-click="showAddressTransactions(address)">
+                    <i class="boldText">{{address.addrStr}}</i>
+                    <p>Label: <i class="boldText">{{address.label}}</i></p>
+                    <p>Balance: <i class="boldText">{{address.balance | currency : 'CSC ' : 8}}</i></p>
+                    <p>Transactions: <i class="boldText">{{address.txApperances}}</i></p>
+                    <ion-option-button class="button button-assertive custom-option-btn icon fa fa-qrcode" ng-click="addressQrCode(address)"></ion-option-button>
+                    <ion-option-button class="button button-energized custom-option-btn icon ion-edit" ng-click="addressLabel(address)"></ion-option-button>
+                    <ion-option-button class="button button-balanced custom-option-btn icon ion-share" ng-click="addressShare(address)"></ion-option-button>
+                </ion-item>
+            </ion-list>
+        </div>
+</ion-content>
 </ion-view>

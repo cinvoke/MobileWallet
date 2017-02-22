@@ -1,8 +1,7 @@
 <ion-view>
     <ion-nav-title>{{'l_exchanges' | translate}}</ion-nav-title>
     <ion-content padding="true">
-        <ion-refresher pulling-text="{{'l_refresh' | translate}}" on-refresh="updateActiveExchanges()">
-        </ion-refresher>
+        <ion-refresher pulling-text="{{'l_refresh' | translate}}" on-refresh="updateActiveExchanges()"></ion-refresher>
         <ion-list class="list-inset">
             <ion-item class="card item-thumbnail-left" ng-repeat="exchange in activeExchanges" ng-click="openExchangeURL(exchange.access_url)">
                 <img data-ng-src="data:{{exchange.image_mime_type}};base64,{{exchange.exchange_image}}" />

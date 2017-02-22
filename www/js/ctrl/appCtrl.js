@@ -31,9 +31,30 @@
 
     // Create the login modal that we will use later
     $ionicModal.fromTemplateUrl('templates/security/login.html', {
+        id: 'loginModal',
         scope: $scope
     }).then(function (modal) {
         $scope.loginModal = modal;
+    });
+
+    // Create the Addressbook modal that we will use later
+    $ionicModal.fromTemplateUrl('templates/modals/addressbook.html', {
+        id: 'addressbookModal',
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $log.debug("### show addressbook modal created");
+        $scope.addressbookModal = modal;
+    });
+
+    // Create the Transactions modal that we will use later
+    $ionicModal.fromTemplateUrl('templates/modals/transactions.html', {
+        id: 'transactionsModal',
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $log.debug("### show transactions modal created");
+        $scope.transactionsModal = modal;
     });
 
     // Triggered in the login modal to close it

@@ -62,7 +62,7 @@ self.onmessage = function (event) {
             var msg = { messageType: 'result', content: decrypted_password.toString(CryptoJS.enc.Utf8) };
             postMessage(msg); // return data to main script that invoked the worker
         } catch (err) {
-            var msg = { messageType: 'error', content: err };
+            var msg = { messageType: 'error', content: err.message };
             postMessage(msg);
         }
 

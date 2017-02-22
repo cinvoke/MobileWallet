@@ -1,0 +1,31 @@
+﻿<ion-modal-view ng-controller="TransactionsCtrl">
+    <ion-header-bar class="bar bar-header bar-assertive">
+        <h1 class="title">{{'l_transactions' | translate}}</h1>
+        <div class="buttons">
+            <button class="button button-clear" ng-click="closeTransactionsModal()">{{'l_close'|translate}}</button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <ion-refresher pulling-text="{{'l_refresh' | translate}}" on-refresh="updateTransactions()"></ion-refresher>
+        <ion-list>
+            <ion-item class="item item-text-wrap" ng-hide="txArray.length > 0">
+                <p class="centerText">No transactions available.</p>
+            </ion-item>
+            <ion-item class="item-icon-left item-text-wrap" ng-repeat="tx in txArray" ng-show="txArray.length > 0">
+                <i class="icon fa fa-sign-out royal" ng-if="tx.type === 'SEND'"></i>
+                <i class="icon fa fa-sign-in balanced" ng-if="tx.type === 'RECEIVE'"></i>
+                <i class="icon fa fa fa-exchange stable" ng-if="tx.type === 'WALLET'"></i>
+                <p>Tx ID: <i class="boldText">{{tx.txid}}</i></p>
+                <p>Size: <i class="boldText">{{tx.size}} (bytes)</i></p>
+                <p>Confirmations: <i class="boldText">{{tx.confirmations}}</i></p>
+                <p ng-if="tx.time!==undefined">Received Time: <i class="boldText">{{(tx.time*1000) | date:'dd-MM-yyyy HH:mm:ss Z'}}</i></p>
+                <p>Amount: <i class="boldText">{{tx.amount | currency : '': 8}}</i></p>
+                <p>Fees: <i class="boldText">{{tx.fees}}</i></p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="loadMoreTransactions()"
+                             distance="1%"
+                             ng-if="moreDataCanBeLoaded">
+        </ion-infinite-scroll>
+    </ion-content>
+</ion-modal-view>
