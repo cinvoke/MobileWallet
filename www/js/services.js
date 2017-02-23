@@ -677,10 +677,15 @@ angular.module('casinocoin.services', [])
         receiveAddresses.remove(receiveAddress);
     };
 
-    function getBookAddresses() {
+    function getBookAddresses(offsetValue, limitValue) {
         return $q(function (resolve, reject) {
             if (initComplete) {
-                resolve(bookAddresses);
+                var resultSet = bookAddresses.chain()
+                            .find()
+                            .offset(offsetValue)
+                            .limit(limitValue)
+                            .data();
+                resolve(resultSet);
             } else {
                 reject("Initialisation of WalletDB is not complete!")
             }

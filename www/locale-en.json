@@ -1,7 +1,7 @@
 {
   "l_app_header": "Sandcoins",
   "l_version": "Version",
-  "l_copyright" : "Copyright 2016 - Sandcoins Developers",
+  "l_copyright" : "Copyright 2017 - Sandcoins Developers",
   "l_home": "Home",
   "l_menu": "Menu",
   "l_login" : "Login",
@@ -17,7 +17,7 @@
   "l_hashrate" : "Hashrate (GHash/sec)",
   "l_block_time" : "Time last block",
   "l_last_btc_price": "Last traded BTC price",
-  "l_last_price" :  "Last traded price",
+  "l_last_price" :  "Last price",
   "l_close" : "Close",
   "l_email" : "Email Address",
   "l_settings" : "Preferences",
@@ -71,5 +71,15 @@
   "l_touch_id": "Touch ID",
   "l_security": "Security",
   "l_2FA": "Two Factor Authentication",
-  "l_show_blocks": "Show new block messages"
+  "l_show_blocks": "Show new block messages",
+  "l_add_address": "Add New Address",
+  "l_add_address_desc": "Enter a label and the address",
+  "l_label": "Label",
+  "l_csc_address": "CSC Address",
+  "l_invalid_csc_address": "Invalid CSC Address!",
+  "l_about": "About",
+  "l_delete_address": "Delete Address?",
+  "l_delete_address_desc": "Are you sure you want to delete this address from your addressbook?",
+  "l_edit_address_label":"Edit Address Label",
+  "l_save": "Save"
 }

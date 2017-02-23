@@ -6,7 +6,7 @@
         </div>
     </ion-header-bar>
     <ion-content>
-        <ion-refresher pulling-text="{{'l_refresh' | translate}}" on-refresh="updateTransactions()"></ion-refresher>
+        <ion-refresher pulling-text="{{'l_refresh' | translate}}" on-refresh="refreshTransactions()"></ion-refresher>
         <ion-list>
             <ion-item class="item item-text-wrap" ng-hide="txArray.length > 0">
                 <p class="centerText">No transactions available.</p>
@@ -25,7 +25,7 @@
         </ion-list>
         <ion-infinite-scroll on-infinite="loadMoreTransactions()"
                              distance="1%"
-                             ng-if="moreDataCanBeLoaded">
+                             ng-if="!noMoreScroll">
         </ion-infinite-scroll>
     </ion-content>
 </ion-modal-view>

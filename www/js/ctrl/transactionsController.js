@@ -2,16 +2,32 @@
 
 .controller('TransactionsCtrl', function ($scope, $log, WalletService) {
     $log.debug("### TransactionsCtrl ###");
-    $scope.moreDataCanBeLoaded = true;
+    $scope.noMoreScroll = true;
     $scope.txOffset = 0;
     $scope.txLimit = 10;
     $scope.txArray = [];
+
+    function processTxResult(txResultSet){
+        if (txResultSet.length > 0) {
+            $log.debug("### txArray Before: " + $scope.txArray.length);
+            angular.forEach(txResultSet, function(newTx){
+                $scope.txArray.push(newTx);
+            });
+            if (txResultSet.length >= $scope.txLimit) {
+                $scope.noMoreScroll = false;
+            }
+            $log.debug("### txArray After: " + $scope.txArray.length);
+        } else {
+            $scope.noMoreScroll = true;
+        }
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+    }
 
     $scope.getAllTransactions = function () {
         $log.debug("### getAllTransactions - offset: " + $scope.txOffset + " limit: " + $scope.txLimit);
         WalletService.getTransactions($scope.txOffset, $scope.txLimit).then(function (txResultSet) {
             $log.debug("### txResultSet count: " + txResultSet.length);
-            angular.extend($scope.txArray, txResultSet);
+            processTxResult(txResultSet);
         });
     }
 
@@ -27,19 +43,7 @@
         $log.debug("### Load more TX - offset: " + $scope.txOffset + " limit: " + $scope.txLimit);
         WalletService.getTransactions($scope.txOffset, $scope.txLimit).then(function (txResultSet) {
             $log.debug("### txResultSet count: " + txResultSet.length);
-            if (txResultSet.length > 0) {
-                $log.debug("### txArray Before: " + $scope.txArray.length);
-                angular.forEach(txResultSet, function(newTx){
-                    $scope.txArray.push(newTx);
-                });
-                if (txResultSet.length < $scope.txLimit) {
-                    $scope.moreDataCanBeLoaded = false;
-                }
-                $log.debug("### txArray After: " + $scope.txArray.length);
-            } else {
-                $scope.moreDataCanBeLoaded = false;
-            }
-            $scope.$broadcast('scroll.infiniteScrollComplete');
+            processTxResult(txResultSet);
         });
     }
 
@@ -47,11 +51,11 @@
         $scope.transactionsModal.hide();
     }
 
-    $scope.updateTransactions = function () {
+    $scope.refreshTransactions = function () {
         $scope.txOffset = 0;
+        $scope.txArray = [];
         WalletService.getTransactions($scope.txOffset, $scope.txLimit).then(function (txResultSet) {
-            $log.debug("### txResultSet count: " + txResultSet.length);
-            $scope.txArray = txResultSet;
+            processTxResult(txResultSet);
         }).finally(function () {
             // Stop the ion-refresher from spinning
             $scope.$broadcast('scroll.refreshComplete');

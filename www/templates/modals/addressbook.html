@@ -9,20 +9,23 @@
         <i class="icon ion-plus"></i>
     </button>
     <ion-content>
-        <ion-refresher pulling-text="{{'l_refresh' | translate}}" on-refresh="updateAddressbook()"></ion-refresher>
+        <ion-refresher pulling-text="{{'l_refresh' | translate}}" on-refresh="refreshAddressbook()"></ion-refresher>
         <ion-list>
             <ion-item class="item item-text-wrap" ng-hide="addressbookArray.length > 0">
                 <p class="centerText">Your addressbook is empty.</p>
             </ion-item>
-            <ion-item class="item item-text-wrap" ng-repeat="address in addressbookArray" ng-show="addressbookArray.length > 0">
-                <p>Tx ID: <i class="boldText">{{address.id}}</i></p>
-                <p>Size: <i class="boldText">{{address.label}} (bytes)</i></p>
-                <p>Confirmations: <i class="boldText">{{address.value}}</i></p>
+            <ion-item class="item item-text-wrap" ng-repeat="addressRow in addressbookArray track by addressRow.address" ng-show="addressbookArray.length > 0">
+                <i class="boldText">{{addressRow.address}}</i>
+                <p>{{'l_label' | translate}}: <i class="boldText">{{addressRow.label}}</i></p>
+                <ion-option-button class="button button-assertive custom-option-btn icon fa fa-qrcode" ng-click="addressQrCode(addressRow)"></ion-option-button>
+                <ion-option-button class="button button-energized custom-option-btn icon ion-edit" ng-click="addressLabel(addressRow)"></ion-option-button>
+                <ion-option-button class="button button-balanced custom-option-btn icon ion-share" ng-click="addressShare(addressRow)"></ion-option-button>
+                <ion-option-button class="button button-royal custom-option-btn icon ion-trash-a" ng-click="addressDelete(addressRow)"></ion-option-button>
             </ion-item>
         </ion-list>
         <ion-infinite-scroll on-infinite="loadMoreAddresses()"
                              distance="1%"
-                             ng-if="moreDataCanBeLoaded">
+                             ng-if="!noMoreScroll">
         </ion-infinite-scroll>
     </ion-content>
 </ion-modal-view>

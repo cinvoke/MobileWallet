@@ -15,7 +15,7 @@
             <ion-list can-swipe="true">
                 <ion-item class="item-text-wrap" ng-repeat="address in walletReceiveAddresses" ng-click="showAddressTransactions(address)">
                     <i class="boldText">{{address.addrStr}}</i>
-                    <p>Label: <i class="boldText">{{address.label}}</i></p>
+                    <p>{{'l_label' | translate}}: <i class="boldText">{{address.label}}</i></p>
                     <p>Balance: <i class="boldText">{{address.balance | currency : 'CSC ' : 8}}</i></p>
                     <p>Transactions: <i class="boldText">{{address.txApperances}}</i></p>
                     <ion-option-button class="button button-assertive custom-option-btn icon fa fa-qrcode" ng-click="addressQrCode(address)"></ion-option-button>
