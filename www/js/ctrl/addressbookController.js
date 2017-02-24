@@ -2,7 +2,7 @@
 
 .controller('AddressbookCtrl', function ($scope, $log, $ionicPopup, $ionicModal,
                                          WalletService, $filter, $cordovaBarcodeScanner,
-                                         $ionicListDelegate, $cordovaSocialSharing
+                                         $ionicListDelegate, $cordovaSocialSharing, $state
                                          ) {
     $log.debug("### AddressbookCtrl ###");
     $scope.noMoreScroll = true;
@@ -98,7 +98,7 @@
             subTitle: $filter('translate')('l_add_address_desc'),
             scope: $scope,
             buttons: [
-              { type: 'button icon fa fa-ban' },
+              { type: 'button button-light icon fa fa-ban' },
               { type: 'button button-assertive icon fa fa-qrcode',
                 onTap: function (e){
                     $scope.scanCscQrCode();
@@ -120,32 +120,43 @@
         });
         newAddressPopup.then(function(result){
             $log.debug("### Add Address Result: " + angular.toJson(result));
-            if(WalletService.validateAddress(result.address)){
-                WalletService.addBookAddress(result);
-                $scope.newAddress = { label:"", address:"" };
-                $scope.refreshAddressbook();
-            } else {
-                var alertPopup = $ionicPopup.alert({
-                    title: $filter('translate')('l_error'),
-                    template: $filter('translate')('l_invalid_csc_address')
-                });
+            if (angular.isDefined(result)) {
+                if (WalletService.validateAddress(result.address)) {
+                    WalletService.addBookAddress(result);
+                    $scope.newAddress = { label: "", address: "" };
+                    $scope.refreshAddressbook();
+                } else {
+                    var alertPopup = $ionicPopup.alert({
+                        title: $filter('translate')('l_error'),
+                        template: $filter('translate')('l_invalid_csc_address'),
+                        buttons: [
+                            { type: 'button button-light icon ion-checkmark-round' }
+                        ]
+                    });
 
-                alertPopup.then(function(res) {
-                    $scope.newAddress = { label:"", address:"" };
-                });
+                    alertPopup.then(function (res) {
+                        $scope.newAddress = { label: "", address: "" };
+                    });
+                }
             }
         });
     }
 
     $scope.refreshAddressbook = function () {
         $scope.addressOffset = 0;
-        $scope.addressArray = [];
+        $scope.addressbookArray = [];
         WalletService.getBookAddresses($scope.addressOffset, $scope.addressLimit).then(function (addressResultSet) {
             processAddressResult(addressResultSet);
         }).finally(function () {
             // Stop the ion-refresher from spinning
             $scope.$broadcast('scroll.refreshComplete');
         });;
+    }
+
+    $scope.onAddressClick = function(addressRow){
+        $log.debug("### onAddressClick: " + angular.toJson(addressRow));
+        $state.go('app.wallet.send', { toAddress : addressRow.address });
+        $scope.addressbookModal.hide();
     }
 
     $scope.addressQrCode = function(addressRow){
@@ -181,10 +192,9 @@
             subTitle: $filter('translate')('l_label'),
             scope: $scope,
             buttons: [
-              { text: $filter('translate')('l_cancel') },
+              { type: 'button button-light icon fa fa-ban' },
               {
-                  text: '<b>'+$filter('translate')('l_save')+'</b>',
-                  type: 'button-assertive',
+                  type: 'button button-assertive icon fa fa-floppy-o',
                   onTap: function(e) {
                       return $scope.addressLabelObject.label;
                   }
@@ -194,7 +204,7 @@
 
         labelPopup.then(function (result) {
             $log.debug("### Popup Result: " + angular.toJson(result));
-            if (result) {
+            if (angular.isDefined(result)) {
                 addressRow.label = result;
                 WalletService.save();
                 $scope.refreshAddressbook();
@@ -208,10 +218,19 @@
         $log.debug("### addressDelete: " + angular.toJson(addressRow));
         var confirmPopup = $ionicPopup.confirm({
             title: $filter('translate')('l_delete_address'),
-            template: $filter('translate')('l_delete_address_desc')
+            template: $filter('translate')('l_delete_address_desc'),
+            buttons: [
+              {
+                  type: 'button button-light icon fa fa-ban', onTap: function (e) { return false; }
+              },
+              { 
+                  type: 'button button-assertive icon ion-checkmark-round', onTap: function (e) { return true; }
+             }
+            ]
         });
 
-        confirmPopup.then(function(result) {
+        confirmPopup.then(function (result) {
+            $log.debug("### Delete result: " + angular.toJson(result));
             if(result) {
                 $log.debug("### Execute Delete: " + addressRow.address);
                 // deactivate the address in the wallet

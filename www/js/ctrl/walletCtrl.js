@@ -6,7 +6,8 @@
                                     $cordovaBarcodeScanner, WalletService,
                                     $ionicPopup, insight, $log, $filter,
                                     $ionicSideMenuDelegate, $ionicListDelegate,
-                                    $cordovaSocialSharing, $window, $state) {
+                                    $cordovaSocialSharing, $window, $state,
+                                    $stateParams) {
     $log.debug("### WalletCtrl ###");
     // disable sidemenu swipe
     $ionicSideMenuDelegate.canDragContent(false);
@@ -67,7 +68,7 @@
 
     // navigate to default tab on page show
     $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-        $log.debug("### toState: " + toState.name + " fromState: " + fromState.name);
+        $log.debug("### toState: " + toState.name + " fromState: " + fromState.name + " toParams: " + angular.toJson(toParams));
 
         if (toState.name == 'app.wallet') {
             // navigate to app.wallet.home tab
@@ -82,6 +83,11 @@
         } else if (toState.name == 'app.wallet.send') {
             // enable sidemenu swipe
             $ionicSideMenuDelegate.canDragContent(true);
+            $log.debug("### toParams toAddress: " + angular.toJson(toParams));
+            if (toParams.toAddress.length > 0) {
+                $scope.sendCoinsRequest.toAddress = angular.copy(toParams.toAddress);
+                toParams.toAddress = "";
+            }
         } else if (toState.name == 'app.wallet.receive') {
             // disable sidemenu swipe
             $ionicSideMenuDelegate.canDragContent(false);

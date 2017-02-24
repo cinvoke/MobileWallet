@@ -14,7 +14,7 @@
             <ion-item class="item item-text-wrap" ng-hide="addressbookArray.length > 0">
                 <p class="centerText">Your addressbook is empty.</p>
             </ion-item>
-            <ion-item class="item item-text-wrap" ng-repeat="addressRow in addressbookArray track by addressRow.address" ng-show="addressbookArray.length > 0">
+            <ion-item class="item item-text-wrap" ng-repeat="addressRow in addressbookArray track by addressRow.address" ng-click="onAddressClick(addressRow)" ng-show="addressbookArray.length > 0">
                 <i class="boldText">{{addressRow.address}}</i>
                 <p>{{'l_label' | translate}}: <i class="boldText">{{addressRow.label}}</i></p>
                 <ion-option-button class="button button-assertive custom-option-btn icon fa fa-qrcode" ng-click="addressQrCode(addressRow)"></ion-option-button>

@@ -89,7 +89,7 @@ ion-side-menu.menu-left.menu {
 }
 
 .button-float {
-    background: #00A2E8 !important;
+    background: $assertive !important;
     color: white !important;
     z-index: 12 !important;
     position: absolute !important;
@@ -110,7 +110,7 @@ ion-side-menu.menu-left.menu {
     -webkit-transform: translate3d(0, -1px, 0) !important;
     transform: translate3d(0, -1px, 0) !important;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4) !important;
-    background: #0076A8 !important;
+    background: $royal !important;
 }
 .button-float .icon:before {
     font-size: 34px;

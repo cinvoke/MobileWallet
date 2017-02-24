@@ -37,6 +37,16 @@
         $scope.loginModal = modal;
     });
 
+    // Create the About modal that we will use later
+    $ionicModal.fromTemplateUrl('templates/modals/about.html', {
+        id: 'aboutModal',
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $log.debug("### show about modal created");
+        $scope.aboutModal = modal;
+    });
+
     // Create the Addressbook modal that we will use later
     $ionicModal.fromTemplateUrl('templates/modals/addressbook.html', {
         id: 'addressbookModal',

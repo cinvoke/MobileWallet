@@ -201,12 +201,13 @@ function ($localStorageProvider) {
         views: {
             'menuContent': {
                 templateUrl: 'templates/wallet.html',
+                abstract: true,
                 controller: 'WalletCtrl'
             }
         }
     })
     .state('app.wallet.send', {
-        url: '/wallet/send',
+        url: '/wallet/send/:toAddress',
         views: {
             'tab-send': {
                 templateUrl: 'templates/wallet/tab-send.html'
@@ -233,8 +234,7 @@ function ($localStorageProvider) {
         url: '/wallet/receive',
         views: {
             'tab-receive': {
-                templateUrl: 'templates/wallet/tab-receive.html',
-                abstract: true
+                templateUrl: 'templates/wallet/tab-receive.html'
             }
         }
     })

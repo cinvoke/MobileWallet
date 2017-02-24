@@ -1,0 +1,26 @@
+﻿<ion-modal-view ng-controller="AboutCtrl">
+    <ion-header-bar class="bar bar-header bar-assertive">
+        <h1 class="title">{{'l_about' | translate}}</h1>
+        <div class="buttons">
+            <button class="button button-clear" ng-click="closeAboutModal()">{{'l_close'|translate}}</button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <div class="row row-center row-25 rowNoMargin">
+            <div class="col col-center">
+                <img src="img/home-icon.png" style="width: 100%;padding: 20% 20% 20% 20%;margin-top: -20% !important;margin-bottom: -20% !important;" />
+            </div>
+        </div>
+        <div class="row row-bottom row-25 rowNoMargin">
+            <div class="col col-center">
+                <p style="width: 100%;text-align:center;">{{'l_version'|translate}}: {{$root.appVersion}}</p>
+                <p style="width: 100%;text-align:center;">{{'l_copyright'|translate}}</p>
+            </div>
+        </div>
+        <div class="row row-center row-50 rowNoMargin">
+            <div class="col col-center">
+                <p style="width: 100%;text-align:center;">{{'l_disclaimer'|translate}}</p>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>
