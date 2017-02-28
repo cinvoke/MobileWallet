@@ -8,7 +8,7 @@ var rootdir = process.argv[2];
 var oauth_clientid = "4E7SLp7CFM6vGcVwBhHxupyM3N0a";
 var oauth_clientsecret = "5a73X2IDvAPMMe5ZkJrJrsm3tBUa";
 // build_app = Casinocoin or Sandcoins
-var build_app = "Casinocoin";
+var build_app = "Sandcoins";
 
 function replace_string_in_file(filename, to_replace, replace_with) {
     var data = fs.readFileSync(filename, 'utf8');

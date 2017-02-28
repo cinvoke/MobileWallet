@@ -12,7 +12,7 @@
         </ion-nav-bar>
         <ion-nav-view name="menuContent"></ion-nav-view>
     </ion-side-menu-content>
-    <ion-side-menu side="left">
+    <ion-side-menu side="left" class="app-menu-left">
         <ion-header-bar class="bar-assertive">
             <h1 class="title">{{'l_menu'|translate}}</h1>
         </ion-header-bar>
@@ -69,7 +69,7 @@
         <ion-header-bar class="bar-assertive">
             <h1 class="title">{{'l_information'|translate}}</h1>
         </ion-header-bar>
-        <ion-content>
+        <ion-content class="app-menu-right">
             <ion-list>
                 <ion-item class="item-asertive item-icon-left" menu-close ng-click="transactionsModal.show()">
                     <i class="icon fa fa-list-alt"></i>{{"l_transactions" | translate}}</ion-item>

@@ -2,20 +2,18 @@
 
 .controller('PinpadCtrl', function ($scope, $rootScope, $log, publicAPI) {
     $log.debug("### PinpadCtrl");
-    // initialize PIN
-    $scope.pinpadPIN = "";
-    $scope.PIN1 = "";
-    $scope.PIN2 = "";
-    $scope.PIN3 = "";
-    $scope.PIN4 = "";
+    $scope.codes = {};
 
     function resetPIN() {
         $scope.pinpadPIN = "";
-        $scope.PIN1 = "";
-        $scope.PIN2 = "";
-        $scope.PIN3 = "";
-        $scope.PIN4 = "";
+        $scope.codes.PIN1 = "";
+        $scope.codes.PIN2 = "";
+        $scope.codes.PIN3 = "";
+        $scope.codes.PIN4 = "";
     }
+
+    // initialize PIN
+    resetPIN();
 
     $scope.addPINNumber = function (addNumber) {
         var pinLength = $scope.pinpadPIN.length;
@@ -23,26 +21,26 @@
             $scope.pinpadPIN = $scope.pinpadPIN + addNumber;
         }
         if (pinLength == 0) {
-            $scope.PIN1 = addNumber;
+            $scope.codes.PIN1 = addNumber;
         } else if (pinLength == 1) {
-            $scope.PIN2 = addNumber;
+            $scope.codes.PIN2 = addNumber;
         } else if (pinLength == 2) {
-            $scope.PIN3 = addNumber;
+            $scope.codes.PIN3 = addNumber;
         } else if (pinLength == 3) {
-            $scope.PIN4 = addNumber;
+            $scope.codes.PIN4 = addNumber;
         }
     }
 
     $scope.removePINNumber = function () {
         var pinLength = $scope.pinpadPIN.length;
         if (pinLength == 1) {
-            $scope.PIN1 = "";
+            $scope.codes.PIN1 = "";
         } else if (pinLength == 2) {
-            $scope.PIN2 = "";
+            $scope.codes.PIN2 = "";
         } else if (pinLength == 3) {
-            $scope.PIN3 = "";
+            $scope.codes.PIN3 = "";
         } else if (pinLength == 4) {
-            $scope.PIN4 = "";
+            $scope.codes.PIN4 = "";
         }
         $scope.pinpadPIN = $scope.pinpadPIN.substr(0, $scope.pinpadPIN.length - 1);
     }

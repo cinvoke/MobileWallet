@@ -10,20 +10,20 @@
         <div class="list list-inset">
             <div class="row">
                 <div class="col col-offset-10 text-center">
-                    <button class="button fa fa-circle fa-2x" ng-hide="PIN1.length == 0"></button>
-                    <button class="button" ng-show="PIN1.length == 0"></button>
+                    <button class="button fa fa-circle fa-2x" ng-if="codes.PIN1.length != 0"></button>
+                    <button class="button" ng-if="codes.PIN1.length == 0"></button>
                 </div>
                 <div class="col text-center">
-                    <button class="button fa fa-circle fa-2x" ng-hide="PIN2.length == 0"></button>
-                    <button class="button" ng-show="PIN2.length == 0"></button>
+                    <button class="button fa fa-circle fa-2x" ng-if="codes.PIN2.length != 0"></button>
+                    <button class="button" ng-if="codes.PIN2.length == 0"></button>
                 </div>
                 <div class="col text-center">
-                    <button class="button fa fa-circle fa-2x" ng-hide="PIN3.length == 0"></button>
-                    <button class="button" ng-show="PIN3.length == 0"></button>
+                    <button class="button fa fa-circle fa-2x" ng-if="codes.PIN3.length != 0"></button>
+                    <button class="button" ng-if="codes.PIN3.length == 0"></button>
                 </div>
                 <div class="col text-center">
-                    <button class="button fa fa-circle fa-2x" ng-hide="PIN4.length == 0"></button>
-                    <button class="button" ng-show="PIN4.length == 0"></button>
+                    <button class="button fa fa-circle fa-2x" ng-if="codes.PIN4.length != 0"></button>
+                    <button class="button" ng-if="codes.PIN4.length == 0"></button>
                 </div>
             </div>
         </div>
